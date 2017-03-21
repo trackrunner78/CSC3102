@@ -1,6 +1,6 @@
 /**
  * @file GraphTester.java
- * @author Duncan, YOUR NAME
+ * @author Duncan, Joshua Millsap
  * @date 99-99-9999
  * Description: Sample text-based menu-driven program to test
  * the weighted diagraph implementation.
@@ -58,7 +58,7 @@ public class GraphDemo
                     console = new Scanner(System.in);
                     System.out.printf("Enter the source vertex: ");
                     int src = console.nextInt();
-                    City srcCity = g.retrieveVertex(new City(source));
+                    City srcCity = g.retrieveVertex(new City(0,"aLable"));
                     System.out.printf("Enter the destination vertex: ");
                     int dest = console.nextInt();
                     City destCity = g.retrieveVertex(new City(dest));
@@ -330,7 +330,7 @@ public class GraphDemo
      * vertex, root. If no such MST exists, then it generates a minimum
      * spanning forest.
      * @param g a weighted directed graph
-     * @param r root of the minimum spanning tree, when one exists.
+     * @param root root of the minimum spanning tree, when one exists.
      * @param parent the parent implementation of the minimum spanning tree/forest
      * @return the weight of such a tree or forest.
      * @throws GraphException when this graph is empty

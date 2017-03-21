@@ -4,7 +4,7 @@ import java.util.function.Function;
 /**
  * @param <E> the data type
  * @file Graph.java
- * @author Duncan, YOUR NAME
+ * @author Duncan, Joshua Millsap
  * @date 99-99-9999
  * Description:This class implements a weighted digraph whose vertices
  * hold objects that implement the Comparable interface.
@@ -414,19 +414,21 @@ public class Graph<E extends Comparable<E>> implements GraphAPI<E>
     public boolean isEdge(E fromKey, E toKey)
     {
         //implement this function
-
+        return false;
     }
 
     @Override
     public boolean isReachable(E fromKey, E toKey)
     {
         //implement this method
+        return false;
     }
 
     @Override
     public long countEdges()
     {
         //implement this method
+        return 0;
     }
    /*--------------------End Code Augmentation ---------------*/
 
