@@ -413,8 +413,15 @@ public class Graph<E extends Comparable<E>> implements GraphAPI<E>
     @Override
     public boolean isEdge(E fromKey, E toKey)
     {
-        //implement this function
-        return false;
+        if (fromKey == toKey)
+            return false;
+        try {
+            retrieveEdge(fromKey, toKey);
+        }
+        catch (GraphException e) {
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -427,8 +434,13 @@ public class Graph<E extends Comparable<E>> implements GraphAPI<E>
     @Override
     public long countEdges()
     {
-        //implement this method
-        return 0;
+        long out = first.outDeg;
+        Vertex tmp = first.pNextVertex;
+        while (tmp.pNextVertex != null) {
+            tmp = tmp.pNextVertex;
+            out+=tmp.outDeg;
+        }
+        return out;
     }
    /*--------------------End Code Augmentation ---------------*/
 
