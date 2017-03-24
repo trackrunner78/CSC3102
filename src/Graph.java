@@ -413,21 +413,45 @@ public class Graph<E extends Comparable<E>> implements GraphAPI<E>
     @Override
     public boolean isEdge(E fromKey, E toKey)
     {
-        if (fromKey == toKey)
-            return false;
-        try {
-            retrieveEdge(fromKey, toKey);
+        Vertex to=(Vertex)toKey;
+        Edge from=((Vertex)fromKey).pEdge;
+        if (from.destination==to)
+            return true;
+        while (from.pNextEdge!=null) {
+            from = from.pNextEdge;
+            if (from.destination==to)
+                return true;
         }
-        catch (GraphException e) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     @Override
     public boolean isReachable(E fromKey, E toKey)
     {
-        //implement this method
+        if (fromKey==toKey || first.pEdge.destination==toKey)
+            return true;
+        ArrayList<Edge> edge = new ArrayList<>();
+        Vertex tmp = first;
+        while (tmp != null) {
+            tmp.processed=0;
+            tmp=tmp.pNextVertex;
+        }
+        edge.add(0,first.pEdge);
+        first.processed++;
+        int lvl = 0;
+        while (edge.get(lvl)!=null) {
+            if (edge.get(lvl).destination == toKey)
+                return true;
+            while (edge.get(lvl).destination.pEdge == null || edge.get(lvl).destination.processed!=0)
+                if (edge.get(lvl).pNextEdge!=null)
+                    edge.set(lvl,edge.get(lvl).pNextEdge);
+                else
+                    lvl--;
+
+            edge.add(edge.get(lvl).destination.pEdge);
+            edge.get(lvl).destination.processed++;
+            lvl++;
+        }
         return false;
     }
 

@@ -133,7 +133,7 @@ public interface GraphAPI<E extends Comparable>
      * with the key.
      * @param key
      * @return out-degree.
-     * @throws graphdemo.GraphException when the vertex with the specified
+     * @throws GraphException when the vertex with the specified
      * key does not exist
      */
     long outDegree(E key) throws GraphException;
@@ -143,7 +143,7 @@ public interface GraphAPI<E extends Comparable>
      * with the key.
      * @param key
      * @return in-degree.
-     * @throws graphdemo.GraphException when the vertex with the specified key
+     * @throws GraphException when the vertex with the specified key
      * does not exist
      */
     long inDegree(E key) throws GraphException;
