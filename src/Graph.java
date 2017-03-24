@@ -451,12 +451,14 @@ public class Graph<E extends Comparable<E>> implements GraphAPI<E>
         return false;
     }
     private void recisReachable(Vertex vert,E toKey) {
-        if (vert.data == toKey)
-            reachable = true;
-        if (vert.pEdge!=null && vert.pEdge.destination!=null && vert.pEdge.destination.processed==0) {
-            if (vert.pNextVertex!=null) {
-                vert.processed++;
-                recisReachable(vert.pEdge.destination,toKey);
+        if (!reachable) {
+            if (vert.data == toKey)
+                reachable = true;
+            if (vert.pEdge != null && vert.pEdge.destination != null && vert.pEdge.destination.processed == 0) {
+                if (vert.pNextVertex != null) {
+                    vert.processed++;
+                    recisReachable(vert.pEdge.destination, toKey);
+                }
             }
         }
     }

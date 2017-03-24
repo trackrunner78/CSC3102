@@ -106,6 +106,8 @@ public class GraphDemo
                     if (g.isReachable(srcCity,destCity))
                     {
                         double totalDistance = 0;
+                        int[][] path = new int[(int)s][(int)s];
+                        double[][] dist = new double[(int)s][(int)s];
 
                         //Declare additional variables and arrays as necessary
 
@@ -118,6 +120,7 @@ public class GraphDemo
                         //        cityX            ->             cityY           distance
                         //
                         //Display the intermediate distances one per line
+                        floyd(g,dist,path);
 
                         System.out.println("=========================================================================================");
                         System.out.printf("Total distance: %f miles.%n%n",totalDistance);
