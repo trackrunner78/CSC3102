@@ -11,6 +11,7 @@ import java.util.function.Function;
  */
 public class Graph<E extends Comparable<E>> implements GraphAPI<E>
 {
+    private boolean reachable=false;
     /*
      * number of vertices (size of this graph)
      */
@@ -362,7 +363,7 @@ public class Graph<E extends Comparable<E>> implements GraphAPI<E>
                 }
                 while (!stack.isEmpty())
                 {
-                    tmp = stack.remove(0);
+                    tmp = stack.get(0);
                     edgeWalk = tmp.pEdge;
                     while(edgeWalk != null)
                     {
@@ -411,49 +412,55 @@ public class Graph<E extends Comparable<E>> implements GraphAPI<E>
 
     /*--------------------Begin Code Augmentation ---------------*/
     @Override
-    public boolean isEdge(E fromKey, E toKey)
-    {
-        Vertex to=(Vertex)toKey;
-        Edge from=((Vertex)fromKey).pEdge;
-        if (from.destination==to)
-            return true;
-        while (from.pNextEdge!=null) {
-            from = from.pNextEdge;
-            if (from.destination==to)
-                return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean isReachable(E fromKey, E toKey)
-    {
-        if (fromKey==toKey || first.pEdge.destination==toKey)
-            return true;
-        ArrayList<Edge> edge = new ArrayList<>();
+    public boolean isEdge(E fromKey, E toKey) {
+        if (fromKey==toKey)
+            return false;
         Vertex tmp = first;
+        Vertex from = null;
         while (tmp != null) {
+            if (tmp.data==fromKey)
+                from=tmp;
             tmp.processed=0;
             tmp=tmp.pNextVertex;
         }
-        edge.add(0,first.pEdge);
-        first.processed++;
-        int lvl = 0;
-        while (edge.get(lvl)!=null) {
-            if (edge.get(lvl).destination == toKey)
+        if (from.pEdge!=null) {
+            if (from.pEdge.destination.data==toKey)
                 return true;
-            while (edge.get(lvl).destination.pEdge == null || edge.get(lvl).destination.processed!=0)
-                if (edge.get(lvl).pNextEdge!=null)
-                    edge.set(lvl,edge.get(lvl).pNextEdge);
-                else
-                    lvl--;
-
-            edge.add(edge.get(lvl).destination.pEdge);
-            edge.get(lvl).destination.processed++;
-            lvl++;
         }
         return false;
     }
+    @Override
+    public boolean isReachable(E fromKey, E toKey) {
+        if (fromKey==toKey)
+            return true;
+        Vertex tmp = first;
+        Vertex from = null;
+        while (tmp != null) {
+            if (tmp.data==fromKey)
+                from=tmp;
+            tmp.processed=0;
+            tmp=tmp.pNextVertex;
+        }
+        if (from!=null) {
+            recisReachable(from, toKey);
+            if (reachable) {
+                reachable=false;
+                return true;
+            }
+        }
+        return false;
+    }
+    private void recisReachable(Vertex vert,E toKey) {
+        if (vert.data == toKey)
+            reachable = true;
+        if (vert.pEdge!=null && vert.pEdge.destination!=null && vert.pEdge.destination.processed==0) {
+            if (vert.pNextVertex!=null) {
+                vert.processed++;
+                recisReachable(vert.pEdge.destination,toKey);
+            }
+        }
+    }
+
 
     @Override
     public long countEdges()

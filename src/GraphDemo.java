@@ -6,6 +6,9 @@
  * the weighted diagraph implementation.
  */
 
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
+import sun.security.provider.certpath.Vertex;
+
 import java.io.*;
 import java.util.*;
 import java.util.function.Function;
@@ -28,6 +31,7 @@ public class GraphDemo
         Graph<City> g = readGraph(args[0]);
         long s = g.size();
         menuReturnValue = -1;
+        boolean edge;
         while (menuReturnValue != 0)
         {
             menuReturnValue = menu();
@@ -38,7 +42,28 @@ public class GraphDemo
                     System.out.println("Adjacency Matrix For The Graph In "+args[0]);
                     System.out.println("=========================================================================================");
 
-                    //write code to generate the adjacency matrix
+                    for (int a = 1; a <= s; a++){
+                        System.out.println();
+                        for(int b = 1; b <= s; b++){
+                            c1 = g.retrieveVertex(new City (a));
+                            c2 = g.retrieveVertex(new City(b));
+                            if(c1 == c2){
+                                System.out.printf("%-10d",0);
+
+                            }
+                            else{
+                                edge = g.isEdge(c1,c2);
+                                if(edge == true){
+                                    double weight = g.retrieveEdge(c1, c2);
+                                    System.out.printf("%-10.1f",weight);
+                                }
+                                else{
+                                    System.out.printf("%-10s","INF");
+                                }
+                            }
+                        }
+                        System.out.println();
+                    }
 
                     System.out.println("=========================================================================================");
                     System.out.println();
@@ -48,7 +73,23 @@ public class GraphDemo
                     System.out.println("Transitive Closure Matrix For The Graph In "+args[0]);
                     System.out.println("=========================================================================================");
 
-                    //write code to generate the transitive closure matrix
+                    for (int a = 1; a<=s; a++) {
+                        System.out.printf("\n");
+                        for (int b = 1; b<=s; b++) {
+                            c1 = g.retrieveVertex(new City(a));
+                            c2 = g.retrieveVertex(new City(b));
+                            if (c1 == c2)
+                                System.out.printf("%-10d",1);
+                            else {
+                                Boolean reachable = g.isReachable(c1,c2);
+                                if (reachable)
+                                    System.out.printf("%-10d",1);
+                                else
+                                    System.out.printf("%-10d",0);
+                            }
+                        }
+                        System.out.printf("\n");
+                    }
 
                     System.out.println("=========================================================================================");
                     System.out.println();
@@ -89,7 +130,7 @@ public class GraphDemo
                     System.out.println("PostOrder DFS Traversal For The Graph In "+args[0]);
                     System.out.println("==========================================================================");
 
-                    //Call the dfsTraverse method
+                    g.dfsTraverse(f);
 
                     System.out.println("==========================================================================");
                     System.out.println();
@@ -100,7 +141,7 @@ public class GraphDemo
                     System.out.println("BFS Traversal For The Graph In "+args[0]);
                     System.out.println("==========================================================================");
 
-                    //Call the bfsTraverse method
+                    g.bfsTraverse(f);
 
                     System.out.println("==========================================================================");
                     System.out.println();
@@ -240,11 +281,39 @@ public class GraphDemo
      * @param dist a matrix containing distances between pairs of vertices.
      * @param path a matrix of intermediate vertices along the path between a pair
      * of vertices. 0 indicates that the two vertices are adjacent.
-     * @return none.
+     * @return none. ][], int path[][]) throws GraphException
      */
     private static void floyd(Graph<City> g, double dist[][], int path[][]) throws GraphException
     {
-        //Implement this method or dijkstra method below (not both).
+        int i,j,k;
+
+        City c1;
+        City c2;
+        for (i=0;i<g.size();i++) {
+            c1=g.retrieveVertex(new City(i+1));
+            for (j = 0; j<g.size();j++) {
+                c2=g.retrieveVertex(new City(j+1));
+                path[i][j]=0;
+                if (i==j)
+                    dist[i][j]=0;
+                else if (g.isEdge(c2,c1))
+                    dist[i][j]=g.retrieveEdge(c1,c1);
+                else
+                    dist[i][j] = INFINITY;
+            }
+        }
+        for (k=0;k<g.size();k++) {
+            for (i=0;i<g.size();i++) {
+                for (j=0;j<g.size();j++) {
+                    if (dist[i][j]!=INFINITY && dist[i][k]!=INFINITY) {
+                        if (dist[i][j]>(dist[i][j]+dist[k][j])) {
+                            dist[i][j]=dist[i][k]+dist[k][j];
+                            path[i][j]=k;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -257,7 +326,7 @@ public class GraphDemo
      */
     private static void dijkstra(Graph<City> g, double[] dist, int[] pred, int source, int destination) throws GraphException
     {
-        //Implement this method or floyd method above (not both).
+        //Implement this method or floyd method below (not both).
     }
 
     /**
@@ -348,7 +417,6 @@ public class GraphDemo
     {
         double totalWeight = 0;
         //implement this function : (for Project # 4)
-
         return totalWeight;
     }
 }
